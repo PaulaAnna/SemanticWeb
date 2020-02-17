@@ -1,4 +1,4 @@
-t<http://example.org/resource/elonmusk/tesla/9/9/2011> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/ontologyStockMarket> .
+<http://example.org/resource/elonmusk/tesla/9/9/2011> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/ontologyStockMarket> .
 <http://example.org/resource/elonmusk/tesla/12/21/2011> <http://example.org/ontologyvolume> "1705500"^^<http://www.w3.org/2001/XMLSchema#integer> .
 <http://example.org/resource/elonmusk/tesla/12/15/2015> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/ontologyStockMarket> .
 <http://example.org/resource/elonmusk/tesla/9/26/2011> <http://example.org/ontologyadjclose> "25.52"^^<http://www.w3.org/2001/XMLSchema#decimal> .
