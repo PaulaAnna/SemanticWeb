@@ -1,0 +1,38 @@
+prefix dbo: <http://dbpedia.org/ontology/>
+prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix sioc: <http://rdfs.org/sioc/ns#>
+prefix dc: <http://purl.org/dc/elements/1.1/>
+
+# run
+# ./tarql/bin/tarql tarql_tweets.sparql
+# from this folder to see results in the command line
+# PS: auf windows muss man glaub ich die tarql.bat aufrufen
+# run
+# ./tarql/bin/tarql tarql_tweets.sparql > ttl/tweets.ttl
+# to save ttl file to ttl folder
+
+# csv col names "row ID","Tweet","Time","Retweet from","User"
+
+CONSTRUCT {
+  # Tesla
+  ?uri a sioc:MicroblogPost ;
+      sioc:content ?Tweet;
+      dc:created ?dateTime;
+      sioc:has_discussion ?retweetFrom;
+      sioc:has_creator ?twitterURI .
+}
+FROM <file:csv/data_elonmusk.csv>
+WHERE {
+  BIND( "http://example.org/resource/elonmusk/" AS ?baseURI )
+  # uri
+  BIND ( URI( CONCAT(?baseURI, "tweet/", ?row_ID) ) AS ?uri )
+  # datetime
+  BIND( xsd:dateTime(CONCAT( REPLACE(?Time, " ", "T"), "Z"))  AS ?dateTime )
+  # retweet from
+  BIND( CONCAT("https://twitter.com/", ?Retweet_from) AS ?retweetFrom )
+  # user
+  BIND( "https://twitter.com/elonmusk" AS ?twitterURI )
+}
+# LIMIT 10

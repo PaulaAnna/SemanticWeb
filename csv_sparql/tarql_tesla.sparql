@@ -1,0 +1,53 @@
+prefix dbo: <http://dbpedia.org/ontology/>
+prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix ex: <http://example.org/ontology>
+
+# run
+# ./tarql/bin/tarql tarql_tesla.sparql
+# from this folder to see results in the command line
+# PS: auf windows muss man glaub ich die .bat aufrufen
+# run
+# ./tarql/bin/tarql tarql_tesla.sparql > ttl/tesla.ttl
+# to save ttl file to ttl folder
+
+# csv col names Date,Open,High,Low,Close,Volume,Adj Close
+
+# Note: trouble with date formating - wasn't able to solve the regex puzzle with day # and month as a single number. Maybe adjust csv ...
+
+CONSTRUCT {
+  # Tweet
+  ?uri a ex:StockMarket ;
+      ex:date ?dateTime;
+      ex:open ?decOpen;
+      ex:high ?decHigh;
+      ex:low ?decLow;
+      ex:close ?decClose;
+      ex:volume ?decVolume;
+      ex:adjclose ?decAdj_Close .
+}
+FROM <file:csv/Tesla.csv>
+WHERE {
+  BIND( "http://example.org/resource/elonmusk/" AS ?baseURI )
+  # uri
+  BIND ( URI( CONCAT(?baseURI, "tesla/", ?Date) ) AS ?uri )
+
+
+  # BIND(STRDT(REPLACE(
+  #   ?Date,
+  #   "(\\d)(\\d)?/(\\d)(\\d)?/(.*)",
+  #   "(?{2}\1\2:0\1)/(?{4}\3\4:0\3)/\5"
+  # ), xsd:date) AS ?dateTime)
+  # datetime
+  BIND( xsd:dateTime(CONCAT( ?Date, "T","09:00:00", "Z")) AS ?dateTime )
+
+  BIND ( xsd:decimal(?Open) AS ?decOpen )
+  BIND ( xsd:decimal(?High) AS ?decHigh )
+  BIND ( xsd:decimal(?Low) AS ?decLow )
+  BIND ( xsd:decimal(?Close) AS ?decClose )
+  BIND ( xsd:integer(?Volume) AS ?decVolume )
+  BIND ( xsd:decimal(?Adj_Close) AS ?decAdj_Close )
+
+}
+# LIMIT 10
